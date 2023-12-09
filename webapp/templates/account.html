@@ -25,6 +25,17 @@
     </div>
     <div class="main-content">
         <h1>Account Info</h1>
+        <div class="account-info">
+            <div class="account-info-item">
+                <span class="account-info-label">Username:</span>
+                <span class="account-info-value">{{ current_user.username }}</span>
+            </div>
+            <div class="account-info-item">
+                <span class="account-info-label">Email:</span>
+                <span class="account-info-value">{{ current_user.email }}</span>
+            </div>
+            <a href="{{ url_for('auth.logout') }}" class="logout-button">Logout</a>
+
     </div>
 </div>
 </body>
