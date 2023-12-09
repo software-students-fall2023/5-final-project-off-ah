@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/header.css') }}">
+    <title>Account Info</title>
+</head>
+<body>
+    <div class="header">
+        <div class="header-content">
+            <div class="spacer"></div> 
+            <span class="header-title">Personal Finance Manager</span>
+            <a href="/account" class="account-icon"></a>
+        </div>
+    </div>
+    <div class="container">
+    <div class="sidebar">
+        <ul>
+            <li><a href="/"><span class="icon home-icon"></span><span class="text">Home</span></a></li>
+            <li><a href="/transaction_log"><span class="icon log-icon"></span><span class="text">Transactions</span></a></li>
+            <li><a href="/report"><span class="icon report-icon"></span><span class="text">Report</span></a></li>
+        </ul>
+    </div>
+    <div class="main-content">
+        <h1>Account Info</h1>
+    </div>
+</div>
+</body>
+</html>
