@@ -1,0 +1,42 @@
+.header {
+    background-color: #333; 
+    color: white;
+    padding: 10px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.header-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}
+
+.header-title {
+    font-size: 24px;
+    font-weight: bold;
+    margin: 0;
+    color: white;
+    text-align: center; 
+    flex-grow: 1; 
+}
+
+.account-icon {
+    display: inline-block;
+    width: 40px;
+    height: 40px;
+    background-image: url('/static/img/accounticon.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    cursor: pointer;
+    margin-left: auto; 
+}
+
+.spacer { 
+    width: 40px;
+    height: 40px;
+    display: inline-block;
+    visibility: hidden;
+}
