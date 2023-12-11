@@ -12,7 +12,7 @@
 <body>
     <div class="header">
         <div class="header-content">
-            <a href="/logout" class="logout-button">Logout</a>
+            <a href="{{ url_for('auth.logout') }}" class="logout-button">Logout</a>
             <span class="header-title">Personal Finance Manager</span>
             <a href="/account" class="account-icon"></a>
         </div>
@@ -29,15 +29,22 @@
         <h1>Transaction Log</h1>
         <div class="transaction-controls">
             <div class="transaction-buttons">
-                <button class="btn" id="money-in">Money In</button>
-                <button class="btn" id="money-out">Money Out</button>
+                <a href="{{ url_for('money_in') }}" class="btn">Money In</a>
+                <a href="{{ url_for('money_out') }}" class="btn">Money Out</a>
             </div>
             <input type="text" id="search-box" placeholder="Search Entries">
         </div>
-           <ul class="transaction-list">
-            <li>Transaction 1</li>
-            <li>Transaction 2</li>
+        <ul class="transaction-list">
+            {% for transaction in transactions %}
+            <li>
+                <a href="{{ url_for('transaction_detail', id=transaction['_id']) }}">
+                    <span class="transaction-description">{{ transaction['description'] }}</span>
+                    <span class="transaction-amount">{{ transaction['amount'] }}</span>
+                </a>
+            </li>
+            {% endfor %}        
         </ul>
+        
     </div>
     </div>
 </div>
