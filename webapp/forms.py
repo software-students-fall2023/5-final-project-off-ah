@@ -15,7 +15,7 @@ class RegisterForm(FlaskForm):
     submit = SubmitField('Register')
 
 class TransactionForm(FlaskForm):
-    type = StringField('Type', validators=[DataRequired()])
+    description = StringField('Description', validators=[DataRequired()])
     amount = DecimalField('Amount', validators=[DataRequired()])
     date = DateTimeField('Date', validators=[DataRequired()])
     category = StringField('Category')

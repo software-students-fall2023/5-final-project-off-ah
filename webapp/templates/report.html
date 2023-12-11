@@ -12,7 +12,7 @@
 <body>
     <div class="header">
         <div class="header-content">
-            <a href="/logout" class="logout-button">Logout</a>
+            <a href="{{ url_for('auth.logout') }}" class="logout-button">Logout</a>
             <span class="header-title">Personal Finance Manager</span>
             <a href="/account" class="account-icon"></a>
         </div>
