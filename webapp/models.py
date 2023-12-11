@@ -1,7 +1,11 @@
 from pymongo import MongoClient
-from flask_login import LoginManager
-from bson.objectid import ObjectId
+from dotenv import load_dotenv
+import os
 
-client = MongoClient('mongodb://localhost:27017/')
-db = client['bank']
+load_dotenv()
 
+MONGO_URI = os.getenv('MONGO_URI', 'mongodb://localhost:27017/')
+DB_NAME = os.getenv('DB_NAME', 'bank')
+
+client = MongoClient(MONGO_URI)
+db = client[DB_NAME]

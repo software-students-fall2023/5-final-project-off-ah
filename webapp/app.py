@@ -1,26 +1,21 @@
 from flask import Flask, render_template, redirect, url_for, request, flash
-from pymongo import MongoClient
 from flask_login import LoginManager, login_required
 from bson.objectid import ObjectId
 from auth import auth, User
-from models import db
+from models import db  # Importing db from models.py
 from forms import TransactionForm
-from flask_pymongo import PyMongo
 import os
-
+from bson.decimal128 import Decimal128
 
 app = Flask(__name__, template_folder='templates')
 app.secret_key = 'your_secret_key'
-
-app.config["MONGO_URI"] = os.environ.get("MONGO_URI", "mongodb://localhost:27017/bank")
-mongo = PyMongo(app)
-
 
 login_manager = LoginManager()
 login_manager.login_view = 'auth.login'
 login_manager.init_app(app)
 
-transactions_collection = mongo.db.transactions
+
+transactions_collection = db.transactions
 
 @app.route('/')
 @login_required  
@@ -52,7 +47,7 @@ class Transaction:
         self.transaction_type = transaction_type
 
     def save(self):
-        result = transactions_collection.insert_one(self.__dict__)  # Use the defined collection
+        result = transactions_collection.insert_one(self.__dict__)
         print("Transaction saved with ID:", result.inserted_id)
 
 @app.route('/transaction_log')
@@ -68,19 +63,19 @@ def transactions():
 @login_required
 def transaction_in():
     form = TransactionForm(request.form)
-    if form.validate_on_submit():
-        transaction_data = Transaction(
+    # if form.validate_on_submit():
+    transaction_data = Transaction(
             form.description.data,
-            form.amount.data,
+            Decimal128(form.amount.data),
             form.date.data,
             form.category.data,
             form.notes.data,
             "in"
         )
-        transaction_data.save()
-        flash('Transaction added successfully!')
-    else:
-        flash('Error in transaction form.')
+    transaction_data.save()
+    flash('Transaction added successfully!')
+    # else:
+    #     flash('Error in transaction form.')
     
     return redirect(url_for('transactions'))
 
@@ -89,19 +84,19 @@ def transaction_in():
 @login_required
 def transaction_out():
     form = TransactionForm(request.form)
-    if form.validate_on_submit():
-        transaction_data = Transaction(
+    # if form.validate_on_submit():
+    transaction_data = Transaction(
             form.description.data,
-            form.amount.data,
+            Decimal128(form.amount.data),
             form.date.data,
             form.category.data,
             form.notes.data,
             "out"  
         )
-        transaction_data.save()
-        flash('Transaction added successfully!')
-    else:
-        flash('Error in transaction form.')
+    transaction_data.save()
+    flash('Transaction added successfully!')
+    # else:
+    #     flash('Error in transaction form.')
     return redirect(url_for('transactions'))
 
     
