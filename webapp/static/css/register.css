@@ -9,12 +9,13 @@ body {
     margin: 0;
 }
 
-.login-container {
+.register-container {
     background-color: #fff;
     padding: 20px;
     border-radius: 8px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     text-align: center;
+    width: 300px; /* You can adjust the width as necessary */
 }
 
 .form-group {
@@ -27,6 +28,7 @@ label {
 }
 
 input[type="text"],
+input[type="email"],
 input[type="password"] {
     width: 100%;
     padding: 8px;
@@ -49,7 +51,7 @@ button:hover {
     background-color: #555;
 }
 
-.register-link {
+.login-link {
     margin-top: 15px;
 }
 
