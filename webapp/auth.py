@@ -41,7 +41,7 @@ def login():
         password = request.form['password']
         user = db.users.find_one({"username": username})
         if user and check_password_hash(user['password_hash'], password):
-            user_obj = User(user['_id'])
+            user_obj = User(user['_id'],user['username'], user['email'])
             login_user(user_obj)
             return redirect(url_for('home'))  
         flash('Invalid credentials')
