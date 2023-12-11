@@ -12,6 +12,9 @@ class User(UserMixin):
         self.username = username
         self.email = email
 
+    def get_id(self):
+        return self.id
+
     @staticmethod
     def get(user_id):
         user_doc = db.users.find_one({"_id": ObjectId(user_id)})
@@ -39,14 +42,19 @@ def login():
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
+        print("Login attempt with username:", username)  
         user = db.users.find_one({"username": username})
-        if user and check_password_hash(user['password_hash'], password):
-            user_obj = User(user['_id'],user['username'], user['email'])
-            login_user(user_obj)
-            return redirect(url_for('home'))  
+        if user:
+            if check_password_hash(user['password_hash'], password):
+                user_obj = User(str(user['_id']), user['username'], user['email'])
+                login_user(user_obj)
+                return redirect(url_for('home'))
+            else:
+                print("Password does not match") 
+        else:
+            print("User not found in DB") 
         flash('Invalid credentials')
     return render_template('login.html')
-
 
 @auth.route('/logout')
 @login_required
