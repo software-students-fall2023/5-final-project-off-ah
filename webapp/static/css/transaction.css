@@ -39,3 +39,17 @@
     margin-bottom: 10px;
     padding: 10px;
 }
+
+.transaction-list a {
+    display: flex;
+    justify-content: space-between;
+    text-decoration: none;
+}
+
+.transaction-in {
+    color: green!important;;
+}
+
+.transaction-out {
+    color: red!important;;
+}
