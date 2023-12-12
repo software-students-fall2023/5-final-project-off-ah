@@ -1,5 +1,5 @@
 from flask import Flask, render_template, redirect, url_for, request, flash
-from flask_login import LoginManager, login_required
+from flask_login import LoginManager, login_required, current_user
 from bson.objectid import ObjectId
 from auth import auth, User
 from models import db  # Importing db from models.py
@@ -25,7 +25,26 @@ def home():
 @app.route('/report')
 @login_required  
 def report():
-    return render_template('report.html')
+    user_id = current_user.get_id()
+    transactions = transactions_collection.find({"user_id": user_id})
+
+    total_spent = 0
+    total_received = 0
+    category_sums_out = {} 
+    category_sums_in = {}  
+
+    for transaction in transactions:
+        amount = float(transaction['amount'].to_decimal())
+        category = transaction['category']
+        if transaction['transaction_type'] == 'out':
+            total_spent += amount
+            category_sums_out[category] = category_sums_out.get(category, 0) + amount
+        else:
+            total_received += amount
+            category_sums_in[category] = category_sums_in.get(category, 0) + amount
+
+    return render_template('report.html', total_spent=total_spent, total_received=total_received, category_sums_out=category_sums_out, category_sums_in=category_sums_in)
+
 
 @app.route('/account')
 @login_required  
@@ -38,7 +57,8 @@ def contact():
     return render_template('contactus.html')
 
 class Transaction:
-    def __init__(self, description, amount, date, category, notes, transaction_type):
+    def __init__(self, user_id, description, amount, date, category, notes, transaction_type):
+        self.user_id = user_id  
         self.description = description
         self.amount = amount
         self.date = date
@@ -50,21 +70,26 @@ class Transaction:
         result = transactions_collection.insert_one(self.__dict__)
         print("Transaction saved with ID:", result.inserted_id)
 
+
 @app.route('/transaction_log')
 @login_required
 def transactions():
-    transaction_data = transactions_collection.find()
-    transaction_list = list(transaction_data)  
-    print("Fetched transactions:", transaction_list)  
+    search_query = request.args.get('search')
+    user_id = current_user.get_id()  
+    query = {"user_id": user_id}  
+    if search_query:
+        query["description"] = {"$regex": search_query, "$options": "i"}
+    transaction_data = transactions_collection.find(query).sort([("date", -1), ("_id", -1)])
+    transaction_list = list(transaction_data)
     return render_template('transaction_log.html', transactions=transaction_list)
-
 
 @app.route('/transaction_in', methods=['POST'])
 @login_required
 def transaction_in():
     form = TransactionForm(request.form)
-    # if form.validate_on_submit():
+    user_id = current_user.get_id()
     transaction_data = Transaction(
+            user_id,
             form.description.data,
             Decimal128(form.amount.data),
             form.date.data,
@@ -74,18 +99,15 @@ def transaction_in():
         )
     transaction_data.save()
     flash('Transaction added successfully!')
-    # else:
-    #     flash('Error in transaction form.')
-    
     return redirect(url_for('transactions'))
-
 
 @app.route('/transaction_out', methods=['POST'])
 @login_required
 def transaction_out():
     form = TransactionForm(request.form)
-    # if form.validate_on_submit():
+    user_id = current_user.get_id()
     transaction_data = Transaction(
+            user_id,
             form.description.data,
             Decimal128(form.amount.data),
             form.date.data,
@@ -95,8 +117,6 @@ def transaction_out():
         )
     transaction_data.save()
     flash('Transaction added successfully!')
-    # else:
-    #     flash('Error in transaction form.')
     return redirect(url_for('transactions'))
 
     

@@ -54,3 +54,13 @@
 .logout-button:hover {
     background-color: #3f3e3e;
 }
+
+.return-button {
+    padding: 5px 10px;
+    background-color: #696868; 
+    color: white;
+    text-decoration: none;
+    border-radius: 4px;
+    font-weight: bold;
+    margin-right: 20px; 
+}

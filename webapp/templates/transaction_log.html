@@ -32,18 +32,25 @@
                 <a href="{{ url_for('money_in') }}" class="btn">Money In</a>
                 <a href="{{ url_for('money_out') }}" class="btn">Money Out</a>
             </div>
-            <input type="text" id="search-box" placeholder="Search Entries">
+            <form action="{{ url_for('transactions') }}" method="get">
+                <input type="text" id="search-box" name="search" placeholder="Search Entries">
+                <button type="submit" class="btn">Search</button>
+            </form>       
         </div>
         <ul class="transaction-list">
             {% for transaction in transactions %}
             <li>
-                <a href="{{ url_for('transaction_detail', id=transaction['_id']) }}">
+                <a href="{{ url_for('transaction_detail', id=transaction['_id']) }}" class="{{ 'transaction-out' if transaction['transaction_type'] == 'out' else 'transaction-in' }}">
                     <span class="transaction-description">{{ transaction['description'] }}</span>
-                    <span class="transaction-amount">{{ transaction['amount'] }}</span>
+                    <span class="transaction-amount">
+                        {{ '-' if transaction['transaction_type'] == 'out' else '+' }}${{ transaction['amount'] }}
+                    </span>
                 </a>
-            </li>
+            </li>            
             {% endfor %}        
         </ul>
+        
+        
         
     </div>
     </div>
