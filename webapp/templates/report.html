@@ -19,36 +19,124 @@
         </div>
     </div>
     <div class="container">
-    <div class="sidebar">
-        <ul>
-            <li><a href="/"><span class="icon home-icon"></span><span class="text">Home</span></a></li>
-            <li><a href="/transaction_log"><span class="icon log-icon"></span><span class="text">Transactions</span></a></li>
-            <li><a href="/report"><span class="icon report-icon"></span><span class="text">Report</span></a></li>
-        </ul>
-    </div>
-    <div class="main-content">
-        <h1>Financial Report</h1>
-        <p>Total Money Spent: ${{ total_spent }}</p>
-        <p>Total Money In: ${{ total_received }}</p>
-    
-        <h2>Spending by Category (Out)</h2>
-        <ul>
-            {% for category, sum in category_sums_out.items() %}
-                <li>{{ category }}: ${{ sum }}</li>
-            {% endfor %}
-        </ul>
-    
-        <h2>Earnings by Category (In)</h2>
-        <ul>
-            {% for category, sum in category_sums_in.items() %}
-                <li>{{ category }}: ${{ sum }}</li>
-            {% endfor %}
-        </ul>
-    </div>
-    
-</div>
-<div class="footer">
-    <p class="footer-text">© 2023 My App. All Rights Reserved.<a href="/contact" class="contact-link"></br>Contact Us</a></p>
-</div>
+        <div class="sidebar">
+            <ul>
+                <li><a href="/"><span class="icon home-icon"></span><span class="text">Home</span></a></li>
+                <li><a href="/transaction_log"><span class="icon log-icon"></span><span class="text">Transactions</span></a></li>
+                <li><a href="/report"><span class="icon report-icon"></span><span class="text">Report</span></a></li>
+            </ul>
+        </div>
+        <div class="main-content">
+            <h1>Financial Report</h1>
+            <p>Total Money Spent: ${{ total_spent }}</p>
+            <p>Total Money In: ${{ total_received }}</p>
+        
+            <h2>Spending by Category (Out)</h2>
+            <ul>
+                {% for category, sum in category_sums_out.items() %}
+                    <li>{{ category }}: ${{ sum }}</li>
+                {% endfor %}
+            </ul>
+        
+            <h2>Earnings by Category (In)</h2>
+            <ul>
+                {% for category, sum in category_sums_in.items() %}
+                    <li>{{ category }}: ${{ sum }}</li>
+                {% endfor %}
+            </ul>
+                    <div class="chart-container">
+                        <h2>Spending Distribution</h2>
+                        <div class="chart" id="spendingChartContainer">
+                            <canvas id="spendingChart"></canvas>
+                        </div>
+                    </div>
+                    
+                    <div class="chart-container">
+                        <h2>Earnings Distribution</h2>
+                        <div class="chart" id="earningsChartContainer">
+                            <canvas id="earningsChart"></canvas>
+                    </div>
+                    
+                    <div class="chart-container">
+                        <h2>Income/Outcome per Month</h2>
+                        <div class="chart" id="monthlyChartContainer">
+                            <canvas id="monthlyChart"></canvas>
+                        </div>
+                    </div>
+            </div>
+            </div>
+        </div>
+        <div class="footer">
+            <p class="footer-text">© 2023 My App. All Rights Reserved.<a href="/contact" class="contact-link"></br>Contact Us</a></p>
+        </div>
+
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+        <script>
+                    const spendingColors = ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF', '#FF9F40', '#FFCD56', '#C9CBCF', '#FF6384', '#C0C0C0'];
+                    const earningColors = ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF', '#FF9F40', '#FFCD56', '#C9CBCF', '#FF6384', '#C0C0C0'];
+
+            var spendingData = {
+                datasets: [{
+                    data: {{ sums_out | tojson }},
+                    backgroundColor: spendingColors
+                }],
+                labels: {{ categories_out | tojson }}
+            };
+
+            var earningsData = {
+                datasets: [{
+                    data: {{ sums_in | tojson }},
+                    backgroundColor: earningColors
+                }],
+                labels: {{ categories_in | tojson }}
+            };
+
+            var ctxSpending = document.getElementById('spendingChart').getContext('2d');
+            var spendingChart = new Chart(ctxSpending, {
+                type: 'pie',
+                data: spendingData
+            });
+
+            var ctxEarnings = document.getElementById('earningsChart').getContext('2d');
+            var earningsChart = new Chart(ctxEarnings, {
+                type: 'pie',
+                data: earningsData
+            });
+
+            var monthlyData = {
+            labels: {{ months | tojson }},
+            datasets: [
+                {
+                    label: 'Income',
+                    data: {{ income_values | tojson }},
+                    backgroundColor: 'rgba(54, 162, 235, 0.6)',
+                    borderColor: 'rgba(54, 162, 235, 1)',
+                    borderWidth: 1
+                },
+                {
+                    label: 'Outcome',
+                    data: {{ outcome_values | tojson }},
+                    backgroundColor: 'rgba(255, 99, 132, 0.6)',
+                    borderColor: 'rgba(255, 99, 132, 1)',
+                    borderWidth: 1
+                        }
+                    ]
+                };
+
+            var ctxMonthly = document.getElementById('monthlyChart').getContext('2d');
+            var monthlyChart = new Chart(ctxMonthly, {
+                type: 'bar',
+                data: monthlyData,
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+
+        </script>
 </body>
 </html>

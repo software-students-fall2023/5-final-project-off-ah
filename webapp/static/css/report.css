@@ -39,7 +39,26 @@
 }
 
 .main-content h2 {
+    position: relative;
     color: #444;
     margin-top: 30px;
     margin-bottom: 15px;
+    text-align: center;
 }
+
+.chart-container {
+    max-width: 600px;
+    margin: auto;
+}
+
+.chart {
+    position: relative;
+    height: 0;
+    padding-bottom: 100%;
+    canvas {
+        position: absolute;
+        top: 0;
+        left: 0;
+    }
+}
+
