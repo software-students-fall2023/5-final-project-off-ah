@@ -6,6 +6,8 @@ from models import db  # Importing db from models.py
 from forms import TransactionForm
 import os
 from bson.decimal128 import Decimal128
+from collections import defaultdict
+from datetime import datetime
 
 app = Flask(__name__, template_folder='templates')
 app.secret_key = 'your_secret_key'
@@ -30,21 +32,35 @@ def report():
 
     total_spent = 0
     total_received = 0
-    category_sums_out = {} 
-    category_sums_in = {}  
+    category_sums_out = {}
+    category_sums_in = {}
+
+    monthly_income = defaultdict(float)
+    monthly_outcome = defaultdict(float)
 
     for transaction in transactions:
         amount = float(transaction['amount'].to_decimal())
         category = transaction['category']
+        transaction_date = transaction['date']
+        month_year = datetime.strptime(transaction_date, '%Y-%m-%d').strftime('%Y-%m')
+
         if transaction['transaction_type'] == 'out':
             total_spent += amount
             category_sums_out[category] = category_sums_out.get(category, 0) + amount
+            monthly_outcome[month_year] += amount
         else:
             total_received += amount
             category_sums_in[category] = category_sums_in.get(category, 0) + amount
+            monthly_income[month_year] += amount
 
-    return render_template('report.html', total_spent=total_spent, total_received=total_received, category_sums_out=category_sums_out, category_sums_in=category_sums_in)
+    categories_out, sums_out = zip(*category_sums_out.items()) if category_sums_out else ([], [])
+    categories_in, sums_in = zip(*category_sums_in.items()) if category_sums_in else ([], [])
+    
+    months = sorted(set(monthly_income.keys()) | set(monthly_outcome.keys()))
+    income_values = [monthly_income[month] for month in months]
+    outcome_values = [monthly_outcome[month] for month in months]
 
+    return render_template('report.html', total_spent=total_spent, total_received=total_received, category_sums_out=category_sums_out, category_sums_in=category_sums_in, categories_out=categories_out, sums_out=sums_out, categories_in=categories_in, sums_in=sums_in, months=months, income_values=income_values, outcome_values=outcome_values)
 
 @app.route('/account')
 @login_required  
