@@ -1,5 +1,12 @@
-body {
+html, body {
+    height: 100%;
     margin: 0;
+}
+
+
+body {
+    display: flex;
+    flex-direction: column;
     font-family: 'Arial';
     color: rgb(0, 0, 0);
     background-color: white;
@@ -7,8 +14,9 @@ body {
 
 .sidebar {
     width: 80px;
-    height: 100vh;
-    background-color: rgb(91, 91, 91); 
+    height: auto; 
+    flex: 0 0 auto; 
+    background-color: rgb(91, 91, 91);
     transition: width 0.5s;
     overflow-x: hidden;
 }
@@ -36,15 +44,14 @@ body {
 
 .container {
     display: flex;
-    /*height: calc(100vh - 60px); */
-
+    flex: 1; 
 }
 
 .main-content {
     flex-grow: 1;
     padding: 20px;
-    background-color: rgb(255, 255, 255); 
-    border-left: 1px solid rgb(255, 255, 255); 
+    background-color: rgb(255, 255, 255);
+    border-left: 1px solid rgb(255, 255, 255);
     overflow-y: auto;
 }
 
