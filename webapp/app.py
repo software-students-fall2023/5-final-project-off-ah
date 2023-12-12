@@ -22,7 +22,22 @@ transactions_collection = db.transactions
 @app.route('/')
 @login_required  
 def home():
-    return render_template('index.html')
+    user_id = current_user.get_id()
+    
+    username = current_user.username
+
+    total_balance = 0
+    transactions = transactions_collection.find({"user_id": user_id})
+    for transaction in transactions:
+        if transaction['transaction_type'] == 'in':
+            total_balance += float(transaction['amount'].to_decimal())
+        else:
+            total_balance -= float(transaction['amount'].to_decimal())
+
+    recent_transactions = transactions_collection.find({"user_id": user_id}).sort("date", -1).limit(5)
+
+    return render_template('index.html', total_balance=total_balance, recent_transactions=recent_transactions, username=username)
+
 
 @app.route('/report')
 @login_required  

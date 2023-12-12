@@ -6,6 +6,7 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/header.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/footer.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/index.css') }}">
 
     <title>Home - Personal Finance Manager</title>
 </head>
@@ -26,7 +27,21 @@
         </ul>
     </div>
     <div class="main-content">
-        <h1>Welcome to Personal Finance Manager</h1>
+        <h1>Welcome to Personal Finance Manager, {{ username }}</h1>
+        <section class="dashboard">
+            <h2>Summary Dashboard</h2>
+            <p>Total Balance: ${{ total_balance }}</p>
+            <h3>Recent Transactions:</h3>
+            <ul>
+                {% for transaction in recent_transactions %}
+                <li>
+                    <span>{{ transaction['date'] }} - </span>
+                    <span>{{ transaction['description'] }}: </span>
+                    <span>{{ '-' if transaction['transaction_type'] == 'out' else '+' }}${{ transaction['amount'] }}</span>
+                </li>
+                {% endfor %}
+            </ul>
+        </section>
     </div>
 </div>
 <div class="footer">
