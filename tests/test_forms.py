@@ -6,6 +6,7 @@ from webapp.forms import LoginForm, RegisterForm, TransactionForm
 class FormTestCase(unittest.TestCase):
 
     def setUp(self):
+        app.config['WTF_CSRF_ENABLED'] = False
         self.app = app.test_client()
 
     def test_login_form(self):
