@@ -1,6 +1,6 @@
 import unittest
 from flask import Flask
-from ..webapp.auth import auth
+from webapp.auth import auth
 from unittest.mock import patch
 
 class TestAuth(unittest.TestCase):

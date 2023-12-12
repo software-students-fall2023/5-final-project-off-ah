@@ -1,5 +1,5 @@
 import unittest
-from forms import LoginForm, RegisterForm, TransactionForm
+from webapp.forms import LoginForm, RegisterForm, TransactionForm
 
 class TestForms(unittest.TestCase):
     def test_login_form(self):

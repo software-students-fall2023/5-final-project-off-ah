@@ -1,5 +1,5 @@
 import unittest
-from models import db, MONGO_URI
+from webapp.models import db, MONGO_URI
 
 class TestModels(unittest.TestCase):
     def test_db_connection(self):
