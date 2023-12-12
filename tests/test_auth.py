@@ -17,6 +17,9 @@ class TestAuth(unittest.TestCase):
         self.app.config['SECRET_KEY'] = 'your_secret_key'
         self.app.config['TESTING'] = True
         self.app.config['WTF_CSRF_ENABLED'] = False
+        @self.app.route('/home')
+        def home():
+            return 'Home Page'
         
         # Initialize the login manager and attach it to the test app
         self.login_manager = LoginManager()
@@ -33,13 +36,14 @@ class TestAuth(unittest.TestCase):
     @patch('webapp.auth.db', MagicMock())
     @patch('webapp.auth.check_password_hash', MagicMock(return_value=True))
     @patch('webapp.auth.login_user', MagicMock(return_value=True))
-    @patch('flask.url_for', MagicMock(return_value='/'))
+    @patch('flask.url_for', MagicMock(side_effect=lambda endpoint, **values: f"/mock-{endpoint}"))
     def test_login(self):
         response = self.client.post('/login', data={
             'username': 'testuser',
             'password': 'testpass'
         })
         self.assertEqual(response.status_code, 302)
+
 
     @patch('webapp.auth.db', MagicMock())
     def test_register(self):
