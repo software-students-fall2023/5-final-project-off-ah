@@ -1,9 +1,9 @@
 from flask import Flask, render_template, redirect, url_for, request, flash
 from flask_login import LoginManager, login_required, current_user
 from bson.objectid import ObjectId
-from auth import auth, User
-from models import db  # Importing db from models.py
-from forms import TransactionForm
+from webapp.auth import auth, User
+from webapp.models import db  # Importing db from models.py
+from webapp.forms import TransactionForm
 import os
 from bson.decimal128 import Decimal128
 from collections import defaultdict
@@ -154,6 +154,7 @@ def transaction_out():
 @app.route('/transaction_detail/<id>')
 @login_required
 def transaction_detail(id):
+    print(f"Transaction ID requested: {id}")  # This line will print the ID to the console
     transaction = db.transactions.find_one({'_id': ObjectId(id)})
     if transaction:
         return render_template('transaction_detail.html', transaction=transaction)
