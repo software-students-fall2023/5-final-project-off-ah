@@ -3,6 +3,10 @@
 An exercise to put to practice software development teamwork, subsystem communication, containers, deployment, and CI/CD pipelines. See [instructions](./instructions.md) for details.
 
 ## Team Members: 
+[Lara Kim](https://github.com/larahynkim) <br> 
+[Angela Tao](https://github.com/XinranTaoAngela) <br> 
+[Marwan AbdElhameed](https://github.com/MarwanWalid2) <br> 
+[Pavly Halim](https://github.com/pavlyhalim) <br> 
 
 ## Set Up Instructions 
 
