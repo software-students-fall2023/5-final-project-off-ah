@@ -1,7 +1,8 @@
 import unittest
 from unittest.mock import patch, MagicMock, AsyncMock
 import webapp
-from bson import Decimal128, ObjectId
+from bson.decimal128 import Decimal128
+from bson.objectid import ObjectId
 from webapp.app import app
 from decimal import Decimal  
 
