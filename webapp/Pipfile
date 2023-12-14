@@ -9,6 +9,9 @@ pymongo = "*"
 flask-login = "*"
 flask-wtf = "*"
 python-dotenv = "*"
+wtforms = "*"
+werkzeug = "*"
+bson = "*"
 
 [dev-packages]
 

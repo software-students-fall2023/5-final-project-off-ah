@@ -1,4 +1,5 @@
-FROM python:3.9
+
+FROM python:3.11-slim
 
 WORKDIR /usr/src/app
 
@@ -8,7 +9,8 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 EXPOSE 4000
 
-ENV FLASK_APP=app.py
-ENV FLASK_RUN_HOST=0.0.0.0
+ENV MONGO_URI=mongodb://localhost:27017/
+ENV DB_NAME=bank
+ENV KEY=secret
 
-CMD ["flask", "run"]
+CMD ["python", "./app.py"]

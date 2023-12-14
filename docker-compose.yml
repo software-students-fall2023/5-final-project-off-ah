@@ -1,19 +1,23 @@
 version: '3.8'
+
 services:
-  web:
-    build:
-      context: ./webapp
-      dockerfile: Dockerfile
+  webapp:
+    build: ./webapp
     ports:
       - "4000:4000"
+    environment:
+      - MONGO_URI=mongodb://mongo:27017/
+      - DB_NAME=bank
+      - KEY=secret
     depends_on:
       - mongo
-    environment:
-      - MONGO_URI=mongodb://mongo:27017/bank
 
   mongo:
     image: mongo
     ports:
       - "27017:27017"
-    environment:
-      - MONGO_INITDB_DATABASE=bank
+    volumes:
+      - mongo-data:/data/db
+
+volumes:
+  mongo-data:

@@ -5,12 +5,16 @@ from webapp.auth import auth, User
 from webapp.models import db  # Importing db from models.py
 from webapp.forms import TransactionForm
 import os
+from dotenv import load_dotenv
 from bson.decimal128 import Decimal128
 from collections import defaultdict
 from datetime import datetime
 
+load_dotenv()
+
+
 app = Flask(__name__, template_folder='templates')
-app.secret_key = 'your_secret_key'
+app.secret_key =  os.getenv('KEY')
 
 login_manager = LoginManager()
 login_manager.login_view = 'auth.login'
