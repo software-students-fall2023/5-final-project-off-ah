@@ -8,6 +8,10 @@ on:
 jobs:
   build-test-push:
     runs-on: ubuntu-latest
+    env:
+      MONGO_URI: mongodb://mongo:27017/
+      DB_NAME: bank
+      KEY: secret
 
     steps:
     - uses: actions/checkout@v2
