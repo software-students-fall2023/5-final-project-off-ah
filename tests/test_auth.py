@@ -13,8 +13,10 @@ with patch('flask.url_for', MagicMock(return_value='/')):
 
 class TestAuth(unittest.TestCase):
     def setUp(self):
-        self.app = Flask(__name__)
-        self.app.config['SECRET_KEY'] = 'your_secret_key'
+        template_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'webapp', 'templates'))
+        self.app = Flask(__name__, template_folder=template_dir)
+
+        self.app.config['SECRET_KEY'] = 'secret'
         self.app.config['TESTING'] = True
         self.app.config['WTF_CSRF_ENABLED'] = False
         @self.app.route('/home')
