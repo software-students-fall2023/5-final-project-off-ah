@@ -1,4 +1,5 @@
 # Final Project
+![Web App CI/CD](https://github.com/software-students-fall2023/5-final-project-off-ah/actions/workflows/python-app.yml/badge.svg)
 
 An exercise to put to practice software development teamwork, subsystem communication, containers, deployment, and CI/CD pipelines. See [instructions](./instructions.md) for details.
 
