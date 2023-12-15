@@ -6,12 +6,34 @@ from flask import Flask
 from flask_login import LoginManager  # Import LoginManager
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'webapp')))
 from auth import auth, User
+from werkzeug.security import generate_password_hash
+from pymongo import MongoClient
 
 # Mock url_for to prevent application context errors
 with patch('flask.url_for', MagicMock(return_value='/')):
     from webapp.auth import login_user
 
 class TestAuth(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        # Database setup for testing
+        cls.client = MongoClient('mongodb://localhost:27017/')
+        cls.db = cls.client['test_bank_auth']  # Using a separate test database
+        cls.users_collection = cls.db.users
+
+        # Inserting a test user
+        test_user = {
+            "username": "testuser",
+            "password_hash": generate_password_hash("testpass"),
+            "email": "test@example.com"
+        }
+        cls.users_collection.insert_one(test_user)
+
+    @classmethod
+    def tearDownClass(cls):
+        cls.users_collection.delete_one({"username": "testuser"})
+        cls.client.close()
+
     def setUp(self):
         template_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'webapp', 'templates'))
         self.app = Flask(__name__, template_folder=template_dir)
