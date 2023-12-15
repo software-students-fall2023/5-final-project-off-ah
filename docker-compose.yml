@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   webapp:
-    # image: marwanwalid5/financeapp:latest
+    image: marwanwalid5/financeapp:latest
     build: 
       context: ./webapp
       dockerfile: Dockerfile
