@@ -5,9 +5,31 @@ from bson.decimal128 import Decimal128
 from bson.objectid import ObjectId
 from webapp.app import app
 from decimal import Decimal  
+from pymongo import MongoClient  
 
 
 class FlaskAppTests(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        cls.client = MongoClient('mongodb://localhost:27018/')
+        cls.db = cls.client['test_bank_app']  
+        cls.transactions_collection = cls.db.transactions
+
+        test_transaction = {
+            "_id": ObjectId("65782b2d4fa8b2784bc9e8fa"),
+            "description": "Test Transaction",
+            "amount": Decimal128("50.0"),
+            "date": "2023-01-01",
+            "category": "Salary",
+            "notes": "Test Notes",
+            "transaction_type": "in"
+        }
+        cls.transactions_collection.insert_one(test_transaction)
+
+    @classmethod
+    def tearDownClass(cls):
+        cls.transactions_collection.delete_one({"_id": ObjectId("65782b2d4fa8b2784bc9e8fa")})
+        cls.client.close()
 
     def setUp(self):
         app.config['TESTING'] = True

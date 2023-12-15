@@ -1,9 +1,9 @@
 from flask import Flask, render_template, redirect, url_for, request, flash
 from flask_login import LoginManager, login_required, current_user
 from bson.objectid import ObjectId
-from auth import auth, User
-from models import db  # Importing db from models.py
-from forms import TransactionForm
+from webapp.auth import auth, User
+from webapp.models import db  # Importing db from models.py
+from webapp.forms import TransactionForm
 import os
 from dotenv import load_dotenv
 from bson.decimal128 import Decimal128
@@ -186,6 +186,8 @@ def load_user(user_id):
 
 
 app.register_blueprint(auth)
+
+
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=4000, debug=True)
