@@ -6,9 +6,9 @@ jobs:
     runs-on: ubuntu-latest
     services:
       mongodb:
-      image: mongo
-      ports:
-        - 27017:27017
+        image: mongo
+        ports:
+          - 27018:27017
 
     env:
       MONGO_URI: "mongodb://localhost:27017/"
