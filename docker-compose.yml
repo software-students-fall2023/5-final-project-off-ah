@@ -2,8 +2,10 @@ version: '3.8'
 
 services:
   webapp:
-    image: marwanwalid5/financeapp:latest
-    build: ./webapp
+    # image: marwanwalid5/financeapp:latest
+    build: 
+      context: ./webapp
+      dockerfile: Dockerfile
     ports:
       - "4000:4000"
     environment:

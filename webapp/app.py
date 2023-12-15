@@ -23,7 +23,7 @@ login_manager.init_app(app)
 
 transactions_collection = db.transactions
 
-@app.route('/')
+@app.route('/', methods=["GET"])
 @login_required  
 def home():
     user_id = current_user.get_id()
@@ -188,7 +188,7 @@ def load_user(user_id):
 app.register_blueprint(auth)
 
 if __name__ == '__main__':
-    app.run(debug=True, port=4000)
+    app.run(host='0.0.0.0', port=4000, debug=True)
 
 
 
