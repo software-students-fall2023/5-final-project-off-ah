@@ -16,6 +16,7 @@ Fork the repository, then in the parent directory,
 
 1. Ensure you have the necessary dependencies
 ```
+cd webapp
 pip install -r requirements.txt
 ```
 
