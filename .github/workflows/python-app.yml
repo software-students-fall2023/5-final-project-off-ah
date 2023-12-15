@@ -59,15 +59,14 @@ jobs:
       uses: actions/checkout@v2
 
     - name: Install SSH key
-      uses: webfactory/ssh-agent@v0.5.3
+      uses: appleboy/ssh-action@v0.1.2
       with:
-        ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+        host: ${{secrets.SSH_HOST}}
+        key: ${{secrets.SSH_PRIVATE_KEY}}
+        username: root
 
-    - name: SSH and Deploy
-      run: |
-        ssh -o "StrictHostKeyChecking=no" root@10.108.0.3 << 'ENDSSH'
+        script: |
           cd 5-final-project-off-ah
           git pull
           docker-compose pull
           docker-compose up -d
-        ENDSSH
