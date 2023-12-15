@@ -124,20 +124,14 @@ class FlaskAppTests(unittest.TestCase):
                 self.assertEqual(response.status_code, 302)
 
     @patch('webapp.app.current_user', create=True)
-    @patch('webapp.app.db.transactions.find')
-    def test_transaction_detail_route(self, mock_find, mock_current_user):
+    @patch('webapp.app.db.transactions.find_one')
+    def test_transaction_detail_route(self, mock_find_one, mock_current_user):
         self.authenticate_mock_user(mock_current_user)
         oid = ObjectId('65782b2d4fa8b2784bc9e8fa')
-
-        mock_transaction_detail = {
-            '_id': oid,  
-            'description': 'Test Transaction',
-            'amount': 50.0,
-            'date': '2023-01-01',
-            'category': 'Salary',
-            'notes': 'Test Notes',
-            'transaction_type': 'in'
-        }
+        mock_transaction_detail = {'_id': oid, 'description': 'Test Transaction', 'amount': 50.0, 'date': '2023-01-01', 'category': 'Salary', 'notes': 'Test Notes', 'transaction_type': 'in'}
+        mock_find_one.return_value = mock_transaction_detail
+        response = self.app.get('/transaction_detail/' + str(oid))
+        self.assertEqual(response.status_code, 200)
 
         with patch('webapp.app.transactions_collection.insert_one', return_value={'inserted_id': oid}):
             self.mock_transactions_collection.insert_one.return_value = mock_transaction_detail

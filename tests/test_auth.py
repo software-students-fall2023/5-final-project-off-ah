@@ -34,29 +34,30 @@ class TestAuth(unittest.TestCase):
         self.client = self.app.test_client()
 
     @patch('webapp.auth.db.users.find_one')
-    @patch('webapp.auth.check_password_hash')
-    @patch('webapp.auth.login_user')
-    @patch('flask.url_for')
-    def test_login(self, mock_url_for, mock_login_user, mock_check_password_hash, mock_find_one):
-        mock_find_one.return_value = {'username': 'testuser', 'password': 'hashed_password'}
-        mock_check_password_hash.return_value = True
-        response = self.client.post('/login', data={
-            'username': 'testuser',
-            'password': 'testpass'
-        })
-        self.assertEqual(response.status_code, 302)
+    def test_login(self, mock_find_one):
+        mock_find_one.return_value = {'username': 'testuser', 'password_hash': 'hashed_pass'}
+        
+        # Simulate the check_password_hash functionality
+        with patch('webapp.auth.check_password_hash', return_value=True):
+            response = self.client.post('/login', data={
+                'username': 'testuser',
+                'password': 'testpass'
+            })
+            self.assertEqual(response.status_code, 302)
 
+    @patch('webapp.auth.db.users.find_one')
     @patch('webapp.auth.db.users.insert_one')
-    @patch('webapp.auth.db.users.find_one')    
-    def test_register(self, mock_find_one, mock_insert_one):
+    def test_register(self, mock_insert_one, mock_find_one):
         mock_find_one.return_value = None
         mock_insert_one.return_value = MagicMock(inserted_id=1)
+
         response = self.client.post('/register', data={
             'username': 'testuser',
             'email': 'test@example.com',
             'password': 'testpass'
         })
         self.assertEqual(response.status_code, 302)
+
 
 
 if __name__ == '__main__':
