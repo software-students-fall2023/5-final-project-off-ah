@@ -13,4 +13,4 @@ ENV MONGO_URI=mongodb://localhost:27017/
 ENV DB_NAME=bank
 ENV KEY=secret
 
-CMD ["python", "-m", "webapp.app"]
+CMD ["python", "./app.py"]
