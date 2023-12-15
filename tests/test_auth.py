@@ -5,40 +5,16 @@ from unittest.mock import patch, MagicMock
 from flask import Flask
 from flask_login import LoginManager  # Import LoginManager
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'webapp')))
-from webapp.auth import auth, User
-from werkzeug.security import generate_password_hash
-from pymongo import MongoClient
+from auth import auth, User
 
 # Mock url_for to prevent application context errors
 with patch('flask.url_for', MagicMock(return_value='/')):
     from webapp.auth import login_user
 
 class TestAuth(unittest.TestCase):
-    @classmethod
-    def setUpClass(cls):
-        # Database setup for testing
-        cls.client = MongoClient('mongodb://localhost:27017/')
-        cls.db = cls.client['test_bank_auth']  # Using a separate test database
-        cls.users_collection = cls.db.users
-
-        # Inserting a test user
-        test_user = {
-            "username": "testuser",
-            "password_hash": generate_password_hash("testpass"),
-            "email": "test@example.com"
-        }
-        cls.users_collection.insert_one(test_user)
-
-    @classmethod
-    def tearDownClass(cls):
-        cls.users_collection.delete_one({"username": "testuser"})
-        cls.client.close()
-
     def setUp(self):
-        template_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'webapp', 'templates'))
-        self.app = Flask(__name__, template_folder=template_dir)
-
-        self.app.config['SECRET_KEY'] = 'secret'
+        self.app = Flask(__name__)
+        self.app.config['SECRET_KEY'] = 'your_secret_key'
         self.app.config['TESTING'] = True
         self.app.config['WTF_CSRF_ENABLED'] = False
         @self.app.route('/home')
@@ -78,8 +54,6 @@ class TestAuth(unittest.TestCase):
         })
         self.assertEqual(response.status_code, 302)
 
-
-    # Add more tests as needed for logout and other auth routes
 
 if __name__ == '__main__':
     unittest.main()
