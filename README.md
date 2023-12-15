@@ -16,7 +16,7 @@ Fork the repository, then in the parent directory,
 
 1. Ensure you have the necessary dependencies
 ```
-pip install Flask Flask-Login pymongo Flask-WTF WTForms python-dotenv Werkzeug bson
+pip install -r requirements.txt
 ```
 
 2. Run the following command: 
