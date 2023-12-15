@@ -9,7 +9,7 @@ services:
     ports:
       - "4000:4000"
     environment:
-      - MONGO_URI=mongodb://mongo:27017/
+      - MONGO_URI=mongodb://mongo:27018/
       - DB_NAME=bank
       - KEY=secret
     depends_on:
@@ -18,7 +18,7 @@ services:
   mongo:
     image: mongo
     ports:
-      - "27017:27017"
+      - "27018:27017"
     volumes:
       - mongo-data:/data/db
 
