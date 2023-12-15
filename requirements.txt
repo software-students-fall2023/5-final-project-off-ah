@@ -1,8 +1,0 @@
-Flask
-Flask-Login
-pymongo
-Flask-WTF
-WTForms
-python-dotenv
-Werkzeug
-bson
