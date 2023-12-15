@@ -38,7 +38,7 @@ def home():
         else:
             total_balance -= float(transaction['amount'].to_decimal())
 
-    recent_transactions = transactions_collection.find({"user_id": user_id}).sort("date", -1).limit(5)
+    recent_transactions = transactions_collection.find({"user_id": user_id}).sort([("date", -1)]).limit(5)
 
     return render_template('index.html', total_balance=total_balance, recent_transactions=recent_transactions, username=username)
 
