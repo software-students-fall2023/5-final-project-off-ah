@@ -8,14 +8,14 @@ on:
 jobs:
   build-test-push:
     runs-on: ubuntu-latest
-    services:
-      mongodb:
-        image: mongo
-        ports:
-          - 27018:27017
+    #services:
+     # mongodb:
+       # image: mongo
+      #  ports:
+         # - 27018:27017
 
     env:
-      MONGO_URI: "mongodb://localhost:27018/"
+      MONGO_URI: "mongodb://localhost:27017/"
       DB_NAME: "bank"
       KEY: "secret"
 
@@ -33,8 +33,8 @@ jobs:
         pip install -r webapp/requirements.txt
         pip install pytest
 
-    - name: Seed Database
-      run: python scripts/seed_database.py
+    #- name: Seed Database
+    #  run: python scripts/seed_database.py
 
     #- name: Run tests
       #run: pytest tests/
