@@ -47,7 +47,5 @@ python -m coverage report
 ![alt text](https://github.com/software-students-fall2023/5-final-project-off-ah/blob/eca4a754cf31badbe8e5eb3146e41a1ac61158c0/test.png)
 
 ### Deployed App: 
-... <br> 
-... <br> 
-... <br> 
+http://159.203.147.53:4000/
  
