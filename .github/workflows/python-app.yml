@@ -34,7 +34,7 @@ jobs:
 
     - name: Run tests with coverage
       # run: pytest tests/
-        run: pytest --cov=webapp tests/
+      run: pytest --cov=webapp tests/
 
     - name: Set up Docker Compose
       run: |
