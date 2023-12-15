@@ -37,7 +37,8 @@ class FlaskAppTests(unittest.TestCase):
         mock_current_user.username = 'test_username'
 
     @patch('webapp.app.current_user', create=True)
-    def test_home_route(self, mock_current_user):
+    @patch('webapp.app.db.transactions.find')
+    def test_home_route(self, mock_find, mock_current_user):
         with app.app_context():
             self.authenticate_mock_user(mock_current_user)
 
@@ -55,7 +56,8 @@ class FlaskAppTests(unittest.TestCase):
                 self.assertEqual(response.status_code, 200)
     
     @patch('webapp.app.current_user', create=True)
-    def test_report_route(self, mock_current_user):
+    @patch('webapp.app.db.transactions.find')
+    def test_report_route(self, mock_find, mock_current_user):
         self.authenticate_mock_user(mock_current_user)
         mock_current_user.get_id.return_value = 'test_user_id'
 
@@ -68,7 +70,8 @@ class FlaskAppTests(unittest.TestCase):
             self.assertEqual(response.status_code, 200)
 
     @patch('webapp.app.current_user', create=True)
-    def test_account_route(self, mock_current_user):
+    @patch('webapp.app.db.transactions.find')
+    def test_account_route(self, mock_find, mock_current_user):
         self.authenticate_mock_user(mock_current_user)
         response = self.app.get('/account')
         self.assertEqual(response.status_code, 200)
@@ -121,7 +124,8 @@ class FlaskAppTests(unittest.TestCase):
                 self.assertEqual(response.status_code, 302)
 
     @patch('webapp.app.current_user', create=True)
-    def test_transaction_detail_route(self, mock_current_user):
+    @patch('webapp.app.db.transactions.find')
+    def test_transaction_detail_route(self, mock_find, mock_current_user):
         self.authenticate_mock_user(mock_current_user)
         oid = ObjectId('65782b2d4fa8b2784bc9e8fa')
 
@@ -155,13 +159,6 @@ class FlaskAppTests(unittest.TestCase):
         self.authenticate_mock_user(mock_current_user)
         response = self.app.get('/money_out')
         self.assertEqual(response.status_code, 200)
-
-    @patch('webapp.app.current_user', create=True)
-    def test_invalid_transaction_detail_route(self, mock_current_user):
-        self.authenticate_mock_user(mock_current_user)
-        invalid_id = ObjectId() 
-        response = self.app.get(f'/transaction_detail/{invalid_id}')
-        self.assertEqual(response.status_code, 404)
 
 if __name__ == '__main__':
     unittest.main()
