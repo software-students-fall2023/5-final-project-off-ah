@@ -2,6 +2,7 @@ version: '3.8'
 
 services:
   webapp:
+    image: marwanwalid5/financeapp:latest
     build: ./webapp
     ports:
       - "4000:4000"
