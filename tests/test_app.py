@@ -11,7 +11,7 @@ from pymongo import MongoClient
 class FlaskAppTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
-        cls.client = MongoClient('mongodb://localhost:27017/')
+        cls.client = MongoClient('mongodb://localhost:27018/')
         cls.db = cls.client['test_bank_app']  
         cls.transactions_collection = cls.db.transactions
 
