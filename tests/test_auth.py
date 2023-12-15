@@ -17,7 +17,7 @@ class TestAuth(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         # Database setup for testing
-        cls.client = MongoClient('mongodb://localhost:27018/')
+        cls.client = MongoClient('mongodb://localhost:27017/')
         cls.db = cls.client['test_bank_auth']  # Using a separate test database
         cls.users_collection = cls.db.users
 

@@ -1,7 +1,10 @@
 import unittest
+import sys
+import os
 from unittest.mock import patch, MagicMock, AsyncMock
 from bson.decimal128 import Decimal128
 from bson.objectid import ObjectId
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'webapp')))
 from webapp.app import app
 from decimal import Decimal  
 from pymongo import MongoClient  
@@ -10,12 +13,24 @@ from pymongo import MongoClient
 class FlaskAppTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
-        cls.client = MongoClient('mongodb://localhost:27018/')
+        cls.client = MongoClient('mongodb://localhost:27017/')
         cls.db = cls.client['test_bank_app']  
         cls.transactions_collection = cls.db.transactions
 
-        test_transaction = {
-            "_id": ObjectId("65782b2d4fa8b2784bc9e8fa"),
+    @classmethod
+    def tearDownClass(cls):
+        # Clear the collection after the tests
+        cls.transactions_collection.delete_many({})
+        cls.client.close()
+
+    def setUp(self):
+        app.config['TESTING'] = True
+        app.config['LOGIN_DISABLED'] = True
+        self.app = app.test_client()
+
+        # Insert a new test transaction for each test to avoid duplicate key error
+        self.test_transaction = {
+            # "_id" field is removed so MongoDB generates it automatically
             "description": "Test Transaction",
             "amount": Decimal128("50.0"),
             "date": "2023-01-01",
@@ -23,17 +38,11 @@ class FlaskAppTests(unittest.TestCase):
             "notes": "Test Notes",
             "transaction_type": "in"
         }
-        cls.transactions_collection.insert_one(test_transaction)
+        self.inserted_transaction = self.transactions_collection.insert_one(self.test_transaction).inserted_id
 
-    @classmethod
-    def tearDownClass(cls):
-        cls.transactions_collection.delete_one({"_id": ObjectId("65782b2d4fa8b2784bc9e8fa")})
-        cls.client.close()
-
-    def setUp(self):
-        app.config['TESTING'] = True
-        app.config['LOGIN_DISABLED'] = True
-        self.app = app.test_client()
+    def tearDown(self):
+        # Cleanup after each test
+        self.transactions_collection.delete_one({"_id": self.inserted_transaction})
 
     def authenticate_mock_user(self, mock_current_user):
         mock_current_user.is_authenticated.return_value = True
@@ -132,8 +141,8 @@ class FlaskAppTests(unittest.TestCase):
 
         with patch('webapp.app.transactions_collection.insert_one', 
                  return_value={'inserted_id': mock_transaction_detail['_id']}):
-            insert_result = webapp.app.transactions_collection.insert_one(mock_transaction_detail)
-            inserted_id = insert_result['inserted_id']
+            insert_result = self.transactions_collection.insert_one(mock_transaction_detail)
+            inserted_id = insert_result.inserted_id
 
             self.assertEqual(mock_transaction_detail['_id'], inserted_id)
 

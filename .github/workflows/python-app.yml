@@ -1,9 +1,5 @@
 name: Flask App
-on:
-  push:
-    branches: [ main, master ]
-  pull_request:
-    branches: [ main, master ]
+on: [push, pull_request]
 
 jobs:
   build-test-push:
@@ -36,8 +32,8 @@ jobs:
     #- name: Seed Database
     #  run: python scripts/seed_database.py
 
-    #- name: Run tests
-      #run: pytest tests/
+    - name: Run tests
+      run: pytest tests/
 
     - name: Set up Docker Compose
       run: |
