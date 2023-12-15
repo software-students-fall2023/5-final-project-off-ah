@@ -1,5 +1,9 @@
 name: Flask App
-on: [push, pull_request]
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
 
 jobs:
   build-test-push:
@@ -23,11 +27,8 @@ jobs:
         pip install --upgrade pip
         pip install -r webapp/requirements.txt
         pip install pytest
-      working-directory: ./webapp
-
     - name: Run tests
       run: pytest tests/
-      working-directory: ./webapp
 
     - name: Set up Docker Compose
       run: |
