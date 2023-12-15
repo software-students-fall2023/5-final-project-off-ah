@@ -13,6 +13,7 @@ with patch('flask.url_for', MagicMock(return_value='/')):
 
 class TestAuth(unittest.TestCase):
     def setUp(self):
+        template_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'webapp', 'templates'))
         self.app = Flask(__name__)
         self.app.config['SECRET_KEY'] = 'your_secret_key'
         self.app.config['TESTING'] = True
