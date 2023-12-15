@@ -5,7 +5,7 @@ from unittest.mock import patch, MagicMock
 from flask import Flask
 from flask_login import LoginManager  # Import LoginManager
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'webapp')))
-from auth import auth, User
+from webapp.auth import auth, User
 from werkzeug.security import generate_password_hash
 from pymongo import MongoClient
 
