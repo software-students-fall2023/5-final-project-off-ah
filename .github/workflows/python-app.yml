@@ -29,6 +29,9 @@ jobs:
         pip install -r webapp/requirements.txt
         pip install pytest
 
+    - name: Seed Database
+      run: python scripts/seed_database.py
+      
     - name: Run tests
       run: pytest tests/
 
