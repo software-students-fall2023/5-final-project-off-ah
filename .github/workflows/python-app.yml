@@ -32,8 +32,9 @@ jobs:
     #- name: Seed Database
     #  run: python scripts/seed_database.py
 
-    - name: Run tests
-      run: pytest tests/
+    - name: Run tests with coverage
+      # run: pytest tests/
+        run: pytest --cov=webapp tests/
 
     - name: Set up Docker Compose
       run: |
