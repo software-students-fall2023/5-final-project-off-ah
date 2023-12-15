@@ -4,7 +4,12 @@ on: [push, pull_request]
 jobs:
   build-test-push:
     runs-on: ubuntu-latest
-    
+    services:
+      mongodb:
+        image: mongo
+        ports:
+          - 27018:27017
+
     env:
       MONGO_URI: "mongodb://localhost:27018/"
       DB_NAME: "bank"
