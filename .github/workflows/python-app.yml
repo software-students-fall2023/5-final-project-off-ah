@@ -2,7 +2,7 @@ name: Flask App
 on: [push, pull_request]
 
 jobs:
-  build-test-push:
+  build-test:
     runs-on: ubuntu-latest
     services:
       mongodb:
@@ -11,67 +11,64 @@ jobs:
           - 27017:27017
 
     env:
-      MONGO_URI: "mongodb://localhost:27017/"
+      MONGO_URI: "mongodb://mongodb:27017/"
       DB_NAME: "bank"
       KEY: "secret"
 
     steps:
-    - uses: actions/checkout@v2
+      - uses: actions/checkout@v2
 
-    - name: Set up Python
-      uses: actions/setup-python@v2
-      with:
-        python-version: 3.11
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.11
 
-    - name: Install dependencies
-      run: |
-        pip install --upgrade pip
-        pip install -r webapp/requirements.txt
-        pip install pytest
+      - name: Install dependencies
+        run: |
+          pip install --upgrade pip
+          pip install -r webapp/requirements.txt
+          pip install pytest
 
-    #- name: Seed Database
-    #  run: python scripts/seed_database.py
+      - name: Run tests with coverage
+        run: pytest --cov=webapp tests/
 
-    - name: Run tests with coverage
-      # run: pytest tests/
-      run: pytest --cov=webapp tests/
-
-    - name: Set up Docker Compose
-      run: |
-        sudo curl -L "https://github.com/docker/compose/releases/download/v2.10.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
-        sudo chmod +x /usr/local/bin/docker-compose
-
-    - name: Build and Start Docker Compose services
-      run: docker-compose up -d --build
-    - name: Log in to Docker Hub
-      uses: docker/login-action@v1
-      with:
-        username: ${{ secrets.DOCKER_HUB_USERNAME }}
-        password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
-
-    - name: Push Flask app image to Docker Hub
-      uses: docker/build-push-action@v2
-      with:
-        push: true
-        tags: marwanwalid5/financeapp:latest
-        file: webapp/Dockerfile
-        context: ./webapp
-  deploy:
+  push:
+    needs: build-test
     runs-on: ubuntu-latest
-
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v2
+      - uses: actions/checkout@v2
 
-    - name: Install SSH key
-      uses: appleboy/ssh-action@v0.1.2
-      with:
-        host: ${{secrets.SSH_HOST}}
-        key: ${{secrets.SSH_PRIVATE_KEY}}
-        username: root
+      - name: Set up Docker Compose
+        run: |
+          sudo curl -L "https://github.com/docker/compose/releases/download/v2.10.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+          sudo chmod +x /usr/local/bin/docker-compose
 
-        script: |
-          cd 5-final-project-off-ah
-          git pull
-          docker-compose pull
-          docker-compose up -d
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKER_HUB_USERNAME }}
+          password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
+
+      - name: Build and push Docker image
+        run: |
+          docker-compose build
+          docker-compose push
+
+  deploy:
+    needs: push
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Install SSH key
+        uses: appleboy/ssh-action@v0.1.2
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          username: root
+          script: |
+            cd 5-final-project-off-ah
+            git pull
+            docker-compose pull
+            docker-compose up -d
