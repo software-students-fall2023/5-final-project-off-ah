@@ -69,5 +69,6 @@ jobs:
         script: |
           cd 5-final-project-off-ah
           git pull
+          docker-compose down
           docker-compose pull
           docker-compose up -d
