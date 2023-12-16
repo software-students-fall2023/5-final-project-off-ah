@@ -158,12 +158,14 @@ def transaction_out():
 @app.route('/transaction_detail/<id>')
 @login_required
 def transaction_detail(id):
-    print(f"Transaction ID requested: {id}")  # This line will print the ID to the console
+    print(f"Transaction ID requested: {id}")
     transaction = db.transactions.find_one({'_id': ObjectId(id)})
+    print("Transaction found:", transaction)  # Debug print
     if transaction:
         return render_template('transaction_detail.html', transaction=transaction)
     else:
         return "Transaction not found", 404
+
 
 
 @app.route('/money_in')

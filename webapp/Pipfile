@@ -11,6 +11,7 @@ flask-wtf = "*"
 python-dotenv = "*"
 wtforms = "*"
 werkzeug = "*"
+email-validator = "*"
 
 [dev-packages]
 
