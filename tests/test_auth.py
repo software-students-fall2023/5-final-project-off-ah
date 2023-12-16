@@ -35,17 +35,17 @@ class TestAuth(unittest.TestCase):
         self.app.register_blueprint(auth)
         self.client = self.app.test_client()
 
-    # @patch('webapp.auth.db.users.find_one')
-    # def test_login(self, mock_find_one):
-    #     mock_find_one.return_value = {'username': 'testuser', 'password_hash': 'hashed_pass'}
+    @patch('webapp.auth.db.users.find_one')
+    def test_login(self, mock_find_one):
+        mock_find_one.return_value = {'username': 'testuser', 'password_hash': 'hashed_pass'}
         
-    #     # Simulate the check_password_hash functionality
-    #     with patch('webapp.auth.check_password_hash', return_value=True):
-    #         response = self.client.post('/login', data={
-    #             'username': 'testuser',
-    #             'password': 'testpass'
-    #         })
-    #         self.assertEqual(response.status_code, 302)
+        # Simulate the check_password_hash functionality
+        with patch('webapp.auth.check_password_hash', return_value=True):
+            response = self.client.post('/login', data={
+                'username': 'testuser',
+                'password': 'testpass'
+            })
+            self.assertEqual(response.status_code, 302)
 
     @patch('webapp.auth.db.users.find_one')
     @patch('webapp.auth.db.users.insert_one')
