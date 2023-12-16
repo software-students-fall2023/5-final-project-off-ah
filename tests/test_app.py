@@ -14,14 +14,15 @@ class FlaskAppTests(unittest.TestCase):
     def setUp(self, mock_mongo_client):
         self.mock_db = MagicMock()
         mock_mongo_client.return_value = self.mock_db
-        self.mock_transactions_collection = self.mock_db.test_bank_app.transactions
-        self.mock_transactions_collection.insert_one.return_value.inserted_id = ObjectId("5f50c31e11b36bc153ca1550")
+        self.mock_transactions_collection = self.mock_db.transactions
+        # self.mock_transactions_collection.insert_one.return_value.inserted_id = ObjectId("5f50c31e11b36bc153ca1550")
 
         app.config['TESTING'] = True
         app.config['LOGIN_DISABLED'] = True
         self.app = app.test_client()
 
         self.test_transaction = {
+            '_id': ObjectId("657d25a42e0685bd319d3b26"),
             "description": "Test Transaction",
             "amount": Decimal128("50.0"),
             "date": "2023-01-01",
@@ -29,7 +30,7 @@ class FlaskAppTests(unittest.TestCase):
             "notes": "Test Notes",
             "transaction_type": "in"
         }
-        self.inserted_transaction = self.mock_transactions_collection.insert_one(self.test_transaction).inserted_id
+        self.inserted_transaction = self.mock_transactions_collection.insert_one(self.test_transaction)
 
     def authenticate_mock_user(self, mock_current_user):
         mock_current_user.is_authenticated = True
@@ -123,34 +124,26 @@ class FlaskAppTests(unittest.TestCase):
                 response = self.app.post('/transaction_out', data=form_data)
                 self.assertEqual(response.status_code, 302)
 
-    # @patch('webapp.app.current_user', create=True)
-    # @patch('webapp.app.db.transactions.find_one')
-    # def test_transaction_detail_route(self, mock_find_one, mock_current_user):
-    #     self.authenticate_mock_user(mock_current_user)
-    #     oid = ObjectId('65782b2d4fa8b2784bc9e8fa')
-    #     mock_transaction_detail = {'_id': oid, 'description': 'Test Transaction', 'amount': 50.0, 'date': '2023-01-01', 'category': 'Salary', 'notes': 'Test Notes', 'transaction_type': 'in'}
-    #     mock_find_one.return_value = mock_transaction_detail
-    #     response = self.app.get('/transaction_detail/' + str(oid))
-    #     self.assertEqual(response.status_code, 200)
-
-    @patch('webapp.app.current_user', create=True)
+    @patch('webapp.app.db.transactions')
     @patch('webapp.app.db.transactions.find_one')
-    def test_transaction_detail_route(self, mock_find_one, mock_current_user):
-        self.authenticate_mock_user(mock_current_user)
-        oid = ObjectId('65782b2d4fa8b2784bc9e8fa')
-        mock_transaction_detail = {'_id': oid, 'description': 'Test Transaction', 'amount': 50.0, 'date': '2023-01-01', 'category': 'Salary', 'notes': 'Test Notes', 'transaction_type': 'in'}
-        mock_find_one.return_value = mock_transaction_detail
-        response = self.app.get('/transaction_detail/' + str(oid))
+    def test_transaction_detail_route(self, collection, mock_find_one):
+
+       
+        test_transact = {
+            '_id': ObjectId(),
+            "description": "Test Transaction",
+            "amount": Decimal128("50.0"),
+            "date": "2023-01-01",
+            "category": "Salary",
+            "notes": "Test Notes",
+            "transaction_type": "in"
+        }
+
+        collection.insert_one(test_transact) 
+        valid_id = str((test_transact)['_id'])
+        mock_find_one.return_value = test_transact
+        response = self.app.get("/transaction_detail/"+valid_id)
         self.assertEqual(response.status_code, 200)
-
-        with patch('webapp.app.transactions_collection.insert_one', return_value={'inserted_id': oid}):
-            self.mock_transactions_collection.insert_one.return_value = mock_transaction_detail
-            response = self.app.get('/transaction_detail/' + str(oid))
-            self.assertEqual(response.status_code, 200)
-
-        with patch('webapp.app.db.transactions.find_one', return_value=mock_transaction_detail):
-            response = self.app.get('/transaction_detail/' + str(oid))
-            self.assertEqual(response.status_code, 200)
 
     @patch('webapp.app.current_user', create=True)
     def test_money_in_route(self, mock_current_user):
