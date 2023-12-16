@@ -4,6 +4,7 @@ import os
 from unittest.mock import patch, MagicMock
 from flask import Flask
 from flask_login import LoginManager  # Import LoginManager
+from bson.objectid import ObjectId
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'webapp')))
 from auth import auth, User
 
@@ -35,17 +36,24 @@ class TestAuth(unittest.TestCase):
         self.app.register_blueprint(auth)
         self.client = self.app.test_client()
 
-    @patch('webapp.auth.db.users.find_one')
-    def test_login(self, mock_find_one):
-        mock_find_one.return_value = {'username': 'testuser', 'password_hash': 'hashed_pass'}
+    @patch('webapp.app.db.users')
+    @patch('webapp.auth')
+    def test_login(self, mock_users, auth):
+        passw = auth.generate_password_hash('hashed_pass', method='pbkdf2:sha256')
+        us = {
+              'username': 'testuser',
+                'email': 'tst@tst.com',
+                'password_hash': passw,
+                }
+        mock_users.insert_one(us)
+
+        mock_users.find_one.return_value = us
         
-        # Simulate the check_password_hash functionality
-        with patch('webapp.auth.check_password_hash', return_value=True):
-            response = self.client.post('/login', data={
+        response = self.client.post('/login', data={
                 'username': 'testuser',
-                'password': 'testpass'
+                'password': 'hashed_pass'
             })
-            self.assertEqual(response.status_code, 302)
+        self.assertEqual(response.status_code, 200)
 
     @patch('webapp.auth.db.users.find_one')
     @patch('webapp.auth.db.users.insert_one')

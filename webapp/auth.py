@@ -46,6 +46,7 @@ def login():
         user = db.users.find_one({"username": username})
         if user:
             if check_password_hash(user['password_hash'], password):
+                
                 user_obj = User(str(user['_id']), user['username'], user['email'])
                 login_user(user_obj)
                 return redirect(url_for('home'))
