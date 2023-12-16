@@ -12,7 +12,7 @@ An exercise to put to practice software development teamwork, subsystem communic
 ## Set Up Instructions 
 
 ### To run locally, 
-Fork the repository, then in the parent directory, 
+Clone the repository, then in the parent directory, 
 
 1. Ensure you have the necessary dependencies
 ```
@@ -25,10 +25,14 @@ pip install -r requirements.txt
 python -m webapp.app
 ```
 
-### To run the containerized app with Docker, 
-... <br> 
-... <br> 
-... <br> 
+### To run the containerized app with Docker, open Docker Desktop, clone the repo and run: 
+```
+cd 5-final-project-off-ah
+git pull
+docker-compose down //optional just to make sure no other docker images are running
+docker-compose pull 
+docker-compose up -d
+```
 
 ### To run tests, 
 1. Ensure you've downloaded pytest
@@ -50,4 +54,7 @@ python -m coverage report
 
 ### Deployed App: 
 http://159.203.147.53:4000/
+
+### Dockerhub images:
+https://hub.docker.com/repository/docker/marwanwalid5/financeapp/general
  
