@@ -2,7 +2,7 @@ name: Flask App
 on: [push, pull_request]
 
 jobs:
-  build-test-push:
+  build-test:
     runs-on: ubuntu-latest
     services:
       mongodb:
@@ -29,36 +29,32 @@ jobs:
         pip install -r webapp/requirements.txt
         pip install pytest
 
-    #- name: Seed Database
-    #  run: python scripts/seed_database.py
-
     - name: Run tests with coverage
-      # run: pytest tests/
       run: pytest --cov=webapp tests/
 
-    - name: Set up Docker Compose
-      run: |
-        sudo curl -L "https://github.com/docker/compose/releases/download/v2.10.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
-        sudo chmod +x /usr/local/bin/docker-compose
+  push:
+    needs: build-test
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
 
-    - name: Build and Start Docker Compose services
-      run: docker-compose up -d --build
     - name: Log in to Docker Hub
       uses: docker/login-action@v1
       with:
         username: ${{ secrets.DOCKER_HUB_USERNAME }}
         password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
 
-    - name: Push Flask app image to Docker Hub
+    - name: Build and Push Flask app image to Docker Hub
       uses: docker/build-push-action@v2
       with:
         push: true
         tags: marwanwalid5/financeapp:latest
         file: webapp/Dockerfile
         context: ./webapp
-  deploy:
-    runs-on: ubuntu-latest
 
+  deploy:
+    needs: push
+    runs-on: ubuntu-latest
     steps:
     - name: Checkout repository
       uses: actions/checkout@v2
@@ -66,8 +62,8 @@ jobs:
     - name: Install SSH key
       uses: appleboy/ssh-action@v0.1.2
       with:
-        host: ${{secrets.SSH_HOST}}
-        key: ${{secrets.SSH_PRIVATE_KEY}}
+        host: ${{ secrets.SSH_HOST }}
+        key: ${{ secrets.SSH_PRIVATE_KEY }}
         username: root
 
         script: |
