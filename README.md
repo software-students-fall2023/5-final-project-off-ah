@@ -3,6 +3,9 @@
 
 An exercise to put to practice software development teamwork, subsystem communication, containers, deployment, and CI/CD pipelines. See [instructions](./instructions.md) for details.
 
+# FiDi: Financial Diary, Your Personal Finance Manager 
+Introducing our Personal Finance Manager, a streamlined web application designed to simplify your financial tracking and planning. This user-friendly app features three core components: a welcoming home page, a transactions log, and a comprehensive financial report page. The home page serves as your gateway to efficient finance management, offering an overview and quick access to all functionalities. Navigate into the transaction logs to meticulously record and review every financial activity, from daily expenses to significant investments. The financial report page then collates this data, presenting you with clear, insightful summaries and analyses of your financial health. Ideal for personal use, our web app functions as a financial diary, making it easier than ever to monitor and manage your money effectively. Experience a new level of control over your finances with our intuitive and straightforward personal finance manager. 
+
 ## Team Members: 
 [Lara Kim](https://github.com/larahynkim) <br> 
 [Angela Tao](https://github.com/XinranTaoAngela) <br> 
