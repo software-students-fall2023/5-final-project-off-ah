@@ -22,7 +22,7 @@ pip install -r requirements.txt
 
 2. Run the following command: 
 ```
-python -m webapp.app
+python app.py
 ```
 
 ### To run the containerized app with Docker, open Docker Desktop, clone the repo and run: 
