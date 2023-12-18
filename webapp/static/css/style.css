@@ -1,0 +1,91 @@
+html, body {
+    height: 100%;
+    margin: 0;
+}
+
+
+body {
+    display: flex;
+    flex-direction: column;
+    font-family: 'Arial';
+    color: rgb(0, 0, 0);
+    background-color: white;
+}
+
+.sidebar {
+    width: 80px;
+    height: auto; 
+    flex: 0 0 auto; 
+    background-color: rgb(91, 91, 91);
+    transition: width 0.5s;
+    overflow-x: hidden;
+}
+
+.sidebar:hover {
+    width: 200px;
+}
+
+.sidebar ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.sidebar ul li {
+    padding: 10px 15px;
+    white-space: nowrap;
+}
+
+.sidebar ul li a {
+    text-decoration: none;
+    color: white; 
+    display: flex; 
+    align-items: center;
+}
+
+.container {
+    display: flex;
+    flex: 1; 
+}
+
+.main-content {
+    flex-grow: 1;
+    padding: 20px;
+    background-color: rgb(255, 255, 255);
+    border-left: 1px solid rgb(255, 255, 255);
+    overflow-y: auto;
+}
+
+.sidebar ul li a .icon,
+.sidebar ul li a .text {
+    transition: all 0.5s;
+}
+
+.sidebar ul li a .icon {
+    width: 40px;  
+    height: 40px; 
+    background-size: contain; 
+    background-repeat: no-repeat; 
+    margin-right: 10px;
+    flex-shrink: 0; 
+}
+
+.sidebar ul li a .text {
+    display: none; 
+    white-space: nowrap;
+}
+
+.sidebar:hover ul li a .text {
+    display: inline;
+}
+
+.home-icon {
+    background-image: url('/static/img/homeicon.png');
+}
+
+.report-icon {
+    background-image: url('/static/img/reporticon.png');
+}
+
+.log-icon {
+    background-image: url('/static/img/logicon.png');
+}

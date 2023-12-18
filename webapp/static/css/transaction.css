@@ -1,0 +1,55 @@
+.transaction-controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.transaction-buttons {
+    display: flex; 
+}
+
+.btn {
+    padding: 10px 15px;
+    margin-right: 10px;
+    background-color: #333;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+.btn:hover {
+    background-color: #555;
+}
+
+#search-box {
+    padding: 10px;
+    border: 1px solid #ccc;
+    width: 200px; 
+}
+
+.transaction-list {
+    list-style: none;
+    padding: 0;
+}
+
+.transaction-list li {
+    background-color: #f0f0f0;
+    border: 1px solid #ddd;
+    margin-bottom: 10px;
+    padding: 10px;
+}
+
+.transaction-list a {
+    display: flex;
+    justify-content: space-between;
+    text-decoration: none;
+}
+
+.transaction-in {
+    color: green!important;;
+}
+
+.transaction-out {
+    color: red!important;;
+}

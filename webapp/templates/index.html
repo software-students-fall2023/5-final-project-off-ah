@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/header.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/footer.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/index.css') }}">
+
+    <title>Home - Personal Finance Manager</title>
+</head>
+<body>
+    <div class="header">
+        <div class="header-content">
+            <a href="{{ url_for('auth.logout') }}" class="logout-button">Logout</a>
+            <span class="header-title">Personal Finance Manager</span>
+            <a href="/account" class="account-icon"></a>
+        </div>
+    </div>
+    <div class="container">
+    <div class="sidebar">
+        <ul>
+            <li><a href="/"><span class="icon home-icon"></span><span class="text">Home</span></a></li>
+            <li><a href="/transaction_log"><span class="icon log-icon"></span><span class="text">Transactions</span></a></li>
+            <li><a href="/report"><span class="icon report-icon"></span><span class="text">Report</span></a></li>
+        </ul>
+    </div>
+    <div class="main-content">
+        <h1>Welcome to Personal Finance Manager, {{ username }}</h1>
+        <section class="dashboard">
+            <h2>Summary Dashboard</h2>
+            <p>Total Balance: ${{ total_balance }}</p>
+            <h3>Recent Transactions:</h3>
+            <ul>
+                {% for transaction in recent_transactions %}
+                <li>
+                    <span>{{ transaction['date'] }} - </span>
+                    <span>{{ transaction['description'] }}: </span>
+                    <span>{{ '-' if transaction['transaction_type'] == 'out' else '+' }}${{ transaction['amount'] }}</span>
+                </li>
+                {% endfor %}
+            </ul>
+        </section>
+    </div>
+</div>
+<div class="footer">
+    <p class="footer-text">© 2023 My App. All Rights Reserved.<a href="/contact" class="contact-link"></br>Contact Us</a></p>
+</div>
+</body>
+</html>
