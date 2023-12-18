@@ -57,6 +57,7 @@ python -m coverage report
 
 ### Deployed App: 
 https://fidi.me/  (Does not work on NYU network use mobile data or another wifi)
+
 http://159.203.147.53:4000/
 
 ### Dockerhub images:
