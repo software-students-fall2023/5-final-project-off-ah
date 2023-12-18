@@ -56,6 +56,7 @@ python -m coverage report
 ![alt text](https://github.com/software-students-fall2023/5-final-project-off-ah/blob/eca4a754cf31badbe8e5eb3146e41a1ac61158c0/test.png)
 
 ### Deployed App: 
+https://fidi.me/  (Does not work on NYU network use mobile data or another wifi)
 http://159.203.147.53:4000/
 
 ### Dockerhub images:
